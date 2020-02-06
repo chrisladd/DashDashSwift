@@ -3,19 +3,19 @@
 import PackageDescription
 
 let package = Package(
-    name: "Flag",
+    name: "DashDashSwift",
     products: [
         .library(
-            name: "Flag",
-            targets: ["Flag"]),
+            name: "DashDashSwift",
+            targets: ["DashDashSwift"]),
     ],
     dependencies: [],
     targets: [
         .target(
-            name: "Flag",
+            name: "DashDashSwift",
             dependencies: []),
         .testTarget(
-            name: "FlagTests",
-            dependencies: ["Flag"]),
+            name: "DashDashSwiftTests",
+            dependencies: ["DashDashSwift"]),
     ]
 )

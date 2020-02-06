@@ -1,5 +1,5 @@
 import XCTest
-@testable import Flag
+@testable import DashDashSwift
 
 final class FlagTests: XCTestCase {
     func testExample() {
