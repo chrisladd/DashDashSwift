@@ -8,12 +8,18 @@
 
 import Foundation
 
-struct Flag {
-    let key: String
-    let shortKey: String?
-    let description: String?
+public struct Flag {
+    public let key: String
+    public let shortKey: String?
+    public let description: String?
     
-    func message() -> String {
+    public init(key: String, shortKey: String?, description: String?) {
+        self.key = key
+        self.shortKey = shortKey
+        self.description = description
+    }
+    
+    public func message() -> String {
         var string = ""
         string += "--" + key
         if let shortKey = shortKey {
