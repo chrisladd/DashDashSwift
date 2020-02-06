@@ -6,7 +6,7 @@ final class FlagTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-        XCTAssertEqual(Flag().text, "Hello, World!")
+        XCTAssertEqual(CommandLineFlag().text, "Hello, World!")
     }
 
     static var allTests = [

@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Flag {
+struct CommandLineFlag {
     let key: String
     let shortKey: String?
     let description: String?

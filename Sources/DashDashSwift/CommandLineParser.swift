@@ -8,9 +8,13 @@
 
 import Foundation
 
-public struct FlagParser {
-    var flags = [String: Flag]()
+public struct CommandLineParser {
+    var flags = [String: CommandLineFlag]()
     var keys = [String]()
+    
+    /**
+     You may set the current arguments from `CommandLine.arguments` for more convenient access.
+     */
     public var arguments = [String]()
     
     public init() {
@@ -24,7 +28,7 @@ public struct FlagParser {
      */
     public mutating func register(key: String, shortKey: String?, description: String?) {
         keys.append(key)
-        flags[key] = Flag(key: key, shortKey: shortKey, description: description)
+        flags[key] = CommandLineFlag(key: key, shortKey: shortKey, description: description)
     }
     
     // MARK: Help
@@ -83,6 +87,9 @@ public struct FlagParser {
         return unflaggedArgs
     }
     
+    /**
+     Returns unflagged arguments from previously registered arguments
+     */
     public func unflaggedArguments() -> [String] {
         return unflaggedArgumentsFrom(arguments)
     }
@@ -109,16 +116,29 @@ public struct FlagParser {
         return nil
     }
     
+    /**
+     Returns a string, given a key, from an array of arguments.
+     
+     If a short key was previously registered, that will also be checked.
+     */
     public func stringFor(key: String, args: [String]) -> String? {
         return stringFor(key: key, shortKey: nil, args: args)
     }
     
+    /**
+     Returns a string, given a key, from arguments previously registered.
+     
+     If a short key was previously registered, that will also be checked.
+     */
     public func stringFor(key: String) -> String? {
         return stringFor(key: key, shortKey: nil, args: arguments)
     }
     
     // MARK: Bools
     
+    /**
+     Returns a boolean given a flag's presence or absense. E.g. --help
+     */
     public func boolForKey(_ key: String, shortKey: String?, args: [String]) -> Bool {
         if args.firstIndex(of: "--" + key) != nil {
             return true
@@ -133,14 +153,19 @@ public struct FlagParser {
         return false
     }
     
+    /**
+    Returns a boolean given a flag's presence or absense. E.g. --help
+    */
     public func boolForKey(_ key: String, args: [String]) -> Bool {
         return boolForKey(key, shortKey: nil, args: args)
     }
     
+    /**
+    Returns a boolean given a flag's presence or absense. E.g. --help
+    */
     public func boolForKey(_ key: String) -> Bool {
         return boolForKey(key, shortKey: nil, args: arguments)
     }
-    
     
     public func dirWithPath(_ path: String) -> String {
         var dir = path
@@ -156,50 +181,83 @@ public struct FlagParser {
     // MARK: Directories
     
     /**
-     Similar to `stringForFlag`, but ensures paths end in a trailing `/`
+     Returns the key's value as a string, but ensures paths end in a trailing `/`
      */
     public func dirFor(key: String, shortKey: String?, args: [String]) -> String? {
         guard let path = stringFor(key: key, shortKey: shortKey, args: args) else { return nil }
         return dirWithPath(path)
     }
     
+    /**
+    Returns the key's value as a string, but ensures paths end in a trailing `/`
+    */
     public func dirFor(key: String, args: [String]) -> String? {
         return dirFor(key: key, shortKey: nil, args: args)
     }
 
     /**
-     If you've registered arguments and flags previously.
-     */
+    Returns the key's value as a string, but ensures paths end in a trailing `/`
+    */
     public func dirFor(key: String) -> String? {
         return dirFor(key: key, shortKey: nil, args: arguments)
     }
     
     // MARK: Ints
     
+    /**
+     Returns the integer value of the key.
+     
+     E.g. --size 10 -> 10
+     */
     public func intFor(key: String, shortKey: String?, args: [String]) -> Int? {
         guard let string = stringFor(key: key, shortKey: shortKey, args: args) else { return nil }
         return Int(string)
     }
     
+    /**
+    Returns the integer value of the key.
+    
+    E.g. --size 10 -> 10
+    */
     public func intFor(key: String, args: [String]) -> Int? {
         return intFor(key: key, shortKey: nil, args: args)
     }
     
+    /**
+    Returns the integer value of the key.
+    
+    E.g. --size 10 -> 10
+    */
     public func intFor(key: String) -> Int? {
         return intFor(key: key, shortKey: nil, args: arguments)
     }
     
     // MARK: Doubles
     
+    /**
+    Returns the double value of the key.
+    
+    E.g. --size 10.7 -> 10.7
+    */
     public func doubleFor(key: String, shortKey: String?, args: [String]) -> Double? {
         guard let string = stringFor(key: key, shortKey: shortKey, args: args) else { return nil }
         return Double(string)
     }
     
+    /**
+    Returns the double value of the key.
+    
+    E.g. --size 10.7 -> 10.7
+    */
     public func doubleFor(key: String, args: [String]) -> Double? {
         return doubleFor(key: key, shortKey: nil, args: args)
     }
     
+    /**
+    Returns the double value of the key.
+    
+    E.g. --size 10.7 -> 10.7
+    */
     public func doubleFor(key: String) -> Double? {
         return doubleFor(key: key, shortKey: nil, args: arguments)
     }
@@ -207,6 +265,11 @@ public struct FlagParser {
     
     // MARK: - Utility
     
+    /**
+    Returns the double value of the key.
+    
+    E.g. --size 10.7 -> 10.7
+    */
     func shortKeyWith(key: String, shortKey: String?) -> String? {
         // use the supplied key if it exists
         if let shortKey = shortKey {
@@ -221,6 +284,11 @@ public struct FlagParser {
         return nil
     }
 
+    /**
+    Returns the double value of the key.
+    
+    E.g. --size 10.7 -> 10.7
+    */
     func nextValueAfter(key: String, args:[String]) -> String? {
         guard let idx = args.firstIndex(of: key) else { return nil }
         guard idx < args.count - 1 else { return nil }
@@ -232,7 +300,4 @@ public struct FlagParser {
         
         return val
     }
-    
-
-
 }
