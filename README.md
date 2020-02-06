@@ -35,7 +35,6 @@ var parser = CommandLineParser(title: "Chotchkie", description: "Chotchkie is a 
 
 // optionally register the command line arguments to parse.
 // you may also pass this value in to any of the parser's functions
-
 parser.arguments = CommandLine.arguments
 
 // optionally register your commands with the parser.
