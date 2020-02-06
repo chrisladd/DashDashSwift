@@ -11,6 +11,8 @@ import Foundation
 public struct CommandLineParser {
     var flags = [String: CommandLineFlag]()
     var keys = [String]()
+    var title: String?
+    var description: String?
     
     /**
      You may set the current arguments from `CommandLine.arguments` for more convenient access.
@@ -19,6 +21,17 @@ public struct CommandLineParser {
     
     public init() {
         register(key: "help", shortKey: "h", description: "Show this help message")
+    }
+
+    /**
+     Initializes a parser with a title and a description.
+     
+     These will be used to print a helpful message to the console when the user adds the -h or --help flags.
+     */
+    public init(title: String?, description: String?) {
+        self.init()
+        self.title = title
+        self.description = description
     }
     
     /**
@@ -39,7 +52,13 @@ public struct CommandLineParser {
     public func help() -> String {
         var help = ""
         
-        print("\nGrate helps slice up audio files into test buffers.\n")
+        if let title = title {
+            help.append("\(title)\n")
+        }
+        
+        if let description = description {
+            help.append("\(description)\n\n")
+        }
         
         for key in keys {
             guard let flag = flags[key] else { continue }
