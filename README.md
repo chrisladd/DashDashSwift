@@ -4,7 +4,7 @@ An unopinionated command line parser for swift CLI projects.
 
 ## Usage
 
-```
+```swift
 import DashDashSwift
 
 // create a parser
