@@ -158,7 +158,7 @@ public struct CommandLineParser {
      
      If no result is found, will look for an unnamed argument at `index`
      */
-    func stringFor(key: String, or index: Int) -> String? {
+    public func stringFor(key: String, or index: Int) -> String? {
         if let result = stringFor(key: key) {
             return result
         }
