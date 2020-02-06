@@ -4,6 +4,29 @@ An unopinionated command line parser for swift CLI projects.
 
 ## Usage
 
+
+### The Bare Minimum
+
+
+
+```swift
+import DashDashSwift
+
+// create a parser
+var parser = CommandLineParser()
+
+let name = parser.stringFor(key: "name", shortKey: "n", args: CommandLine.arguments) ?? "Anonymous"
+
+let age = parser.intFor(key: "age", args: CommandLine.arguments) ?? 21
+
+let height = parser.doubleFor(key: "height", shortKey:"h" args: CommandLine.arguments) ?? 180.0
+
+```
+
+
+### More Flair
+
+
 ```swift
 import DashDashSwift
 
