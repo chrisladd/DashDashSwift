@@ -153,6 +153,25 @@ public struct CommandLineParser {
         return stringFor(key: key, shortKey: nil, args: arguments)
     }
     
+    /**
+     Returns a string, given a key, from arguments previously supplied.
+     
+     If no result is found, will look for an unnamed argument at `index`
+     */
+    func stringFor(key: String, or index: Int) -> String? {
+        if let result = stringFor(key: key) {
+            return result
+        }
+        
+        let unflaggedArgs = unflaggedArguments()
+        
+        if unflaggedArgs.count > index {
+            return unflaggedArgs[index]
+        }
+        
+        return nil
+    }
+    
     // MARK: Bools
     
     /**
