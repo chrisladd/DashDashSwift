@@ -44,6 +44,22 @@ public struct CommandLineParser {
         flags[key] = CommandLineFlag(key: key, shortKey: shortKey, description: description)
     }
     
+    /**
+     Unregisters a single key
+     */
+    public mutating func unregister(key: String) {
+        keys.removeAll { $0 == key }
+        flags.removeValue(forKey: key)
+    }
+    
+    /**
+     Unregisters all keys
+     */
+    public mutating func unregisterAllKeys() {
+        keys = [String]()
+        flags = [String: CommandLineFlag]()
+    }
+    
     // MARK: Help
     
     /**
@@ -134,6 +150,7 @@ public struct CommandLineParser {
         
         return nil
     }
+
     
     /**
      Returns a string, given a key, from an array of arguments.
@@ -142,6 +159,13 @@ public struct CommandLineParser {
      */
     public func stringFor(key: String, args: [String]) -> String? {
         return stringFor(key: key, shortKey: nil, args: args)
+    }
+    
+    /**
+     Returns a string, given a key, from arguments previously registered.
+     */
+    public func stringFor(key: String, shortKey: String?) -> String? {
+        return stringFor(key: key, shortKey: shortKey, args: arguments)
     }
     
     /**
@@ -182,12 +206,13 @@ public struct CommandLineParser {
             return true
         }
         
-        if let shortKey = shortKey {
-            if args.firstIndex(of: "-" + shortKey) != nil {
-                return true
-            }
-        }
+        // fetch our short key from a pre-supplied flag, if it exists
+        guard let shortKey = shortKeyWith(key: key, shortKey: shortKey) else { return false }
         
+        if args.firstIndex(of: "-" + shortKey) != nil {
+            return true
+        }
+
         return false
     }
     
@@ -253,6 +278,17 @@ public struct CommandLineParser {
     }
     
     /**
+     Returns the integer value of the key, as well as a short key.
+     
+     E.g. --size 10 -> 10
+     */
+    public func intFor(key: String, shortKey: String?) -> Int? {
+        guard let string = stringFor(key: key, shortKey: shortKey) else { return nil }
+        return Int(string)
+    }
+    
+
+    /**
     Returns the integer value of the key.
     
     E.g. --size 10 -> 10
@@ -281,6 +317,17 @@ public struct CommandLineParser {
         guard let string = stringFor(key: key, shortKey: shortKey, args: args) else { return nil }
         return Double(string)
     }
+    
+    /**
+    Returns the double value of the key.
+    
+    E.g. --size 10.7 -> 10.7
+    */
+    public func doubleFor(key: String, shortKey: String?) -> Double? {
+        guard let string = stringFor(key: key, shortKey: shortKey, args: arguments) else { return nil }
+        return Double(string)
+    }
+    
     
     /**
     Returns the double value of the key.
