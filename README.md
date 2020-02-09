@@ -22,6 +22,20 @@ let name = parser.stringFor(key: "name")
 let age = parser.intFor(key: "age")
 ```
 
+The parser expects multi-character flags to be prefixed with `--`, and allows single-character boolean flags to be grouped together eith a single `-`. For example:
+
+```swift
+let command = `-rf --path ./input.json -o ./output.json`
+var parser = CommandLineParser()
+parser.arguments = CommandLineParser.argsFrom(string: command)
+
+let inputPath = parser.stringFor(key: "path") // -> Optional("./input.json")
+let outputPath = parser.stringFor(key: "o") // -> Optional("./output.json")
+
+let isRecursive = parser.boolFor(key: "r") // -> true
+let isForced = parser.boolFor(key: "f") // -> true
+```
+
 
 ## Examples
 

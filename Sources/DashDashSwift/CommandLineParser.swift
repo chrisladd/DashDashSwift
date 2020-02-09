@@ -140,6 +140,15 @@ public struct CommandLineParser {
             return val
         }
 
+        // one-character flags can be used with a single trailing dash
+        // otherwise, it's interpreted as combined flags.
+        // e.g. -path -> 'p' 'a' 't' 'h'
+        if key.count == 1 {
+            if let val = nextValueAfter(key: "-" + key, args: args) {
+                return val
+            }
+        }
+        
         // fetch our short key from a pre-supplied flag, if it exists
         guard let shortKey = shortKeyWith(key: key, shortKey: shortKey) else { return nil }
         
@@ -197,22 +206,37 @@ public struct CommandLineParser {
     
     // MARK: Bools
     
+    func argsContainSingleDashed(key: String, args: [String]) -> Bool {
+        // get the single-dashed groups from args
+        for arg in args {
+            guard !arg.starts(with: "--") else { continue }
+            guard arg.starts(with: "-") else { continue }
+            
+            if arg.contains(key) {
+                return true
+            }
+        }
+
+        return false
+    }
+    
     /**
      Returns a boolean given a flag's presence or absense. E.g. --help
      */
     public func boolForKey(_ key: String, shortKey: String?, args: [String]) -> Bool {
+
         if args.firstIndex(of: "--" + key) != nil {
+            return true
+        }
+
+        if argsContainSingleDashed(key: key, args: args) {
             return true
         }
         
         // fetch our short key from a pre-supplied flag, if it exists
         guard let shortKey = shortKeyWith(key: key, shortKey: shortKey) else { return false }
         
-        if args.firstIndex(of: "-" + shortKey) != nil {
-            return true
-        }
-
-        return false
+        return argsContainSingleDashed(key: shortKey, args: args)
     }
     
     /**

@@ -18,6 +18,12 @@ class FlagTests: XCTestCase {
         XCTAssertEqual(value, "Scruffy")
     }
     
+    func testOneCharacterNameParsing() {
+        parser.arguments = CommandLineParser.argsFrom(string: "-n Scruffy")
+        let value = parser.stringFor(key: "n")
+        XCTAssertEqual(value, "Scruffy")
+    }
+    
     func testShortStringParsing() {
         parser.arguments = CommandLineParser.argsFrom(string: "-n Scruffy")
         let value = parser.stringFor(key: "name", shortKey: "n")
@@ -57,6 +63,7 @@ class FlagTests: XCTestCase {
 
     func testShortDoubleParsing() {
         parser.arguments = CommandLineParser.argsFrom(string: "-n Scruffy -a 7")
+        
         XCTAssertEqual(7.0, parser.doubleFor(key: "age", shortKey: "a"))
     }
     
@@ -89,7 +96,6 @@ class FlagTests: XCTestCase {
         XCTAssertFalse(parser.boolForKey("r", args: CommandLineParser.argsFrom(string: "--path . ")))
     }
 
-    
     func testShortBools() {
         parser.register(key: "force", shortKey: "f", description: nil)
         parser.register(key: "recursive", shortKey: "r", description: nil)
@@ -101,6 +107,11 @@ class FlagTests: XCTestCase {
         XCTAssertFalse(parser.boolForKey("recursive", args: CommandLineParser.argsFrom(string: "--path . ")))
     }
 
-    
+
+    func testCombinedFlags() {
+        XCTAssertTrue(parser.boolForKey("f", args: CommandLineParser.argsFrom(string: "--path . -rf")))
+        XCTAssertTrue(parser.boolForKey("r", args: CommandLineParser.argsFrom(string: "--path . -rf")))
+
+    }
 
 }
