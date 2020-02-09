@@ -1,6 +1,6 @@
 # DashDashSwift
 
-An unopinionated command line parser for Swift CLI projects.
+An unopinionated command line parser for Swift CLI projects. DashDashSwift gives straightforward, sophisticated key-value access to command line arguments.
 
 ## Installation
 
