@@ -22,8 +22,6 @@ let name = parser.stringFor(key: "name")
 let age = parser.intFor(key: "age")
 ```
 
-You can also produce a parsable array from a plain string with the `CommandLineParser.argsFrom(string:)
-
 
 ## Examples
 
