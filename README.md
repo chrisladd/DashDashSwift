@@ -1,8 +1,22 @@
 # DashDashSwift
 
-An unopinionated command line parser for swift CLI projects.
+An unopinionated command line parser for Swift CLI projects.
 
-## Usage
+## Installation
+
+DashDashSwift is available as a Swift package. Here's [a quick guide from Apple](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app) about integrating packages into your application.
+
+(You could also just drag the contents of `Sources/DashDashSwift` into your project direcly, if you like.)
+
+
+## Getting Started
+
+You can use an instance of `CommandLineParser` to parse an array of arguments. Generally, you'd get these from an instance of `CommandLine`. 
+
+From there, a parser has methods to extract strings, ints, doubles, bools and more.
+
+
+## Examples
 
 
 ### The Bare Minimum
