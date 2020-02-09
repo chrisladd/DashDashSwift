@@ -350,6 +350,17 @@ public struct CommandLineParser {
     // MARK: - Utility
     
     /**
+     Returns an array of arguments given a string, in the same format returned by `CommandLine.arguments`
+     */
+    public static func argsFrom(string: String) -> [String] {
+        var args: [String] =  ["."]
+        let components = string.split(separator: " ").map({ String($0) })
+        args.append(contentsOf: components)
+        return args
+     }
+
+    
+    /**
     Returns the double value of the key.
     
     E.g. --size 10.7 -> 10.7

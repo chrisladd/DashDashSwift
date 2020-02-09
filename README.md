@@ -11,9 +11,18 @@ DashDashSwift is available as a Swift package. Here's [a quick guide from Apple]
 
 ## Getting Started
 
-You can use an instance of `CommandLineParser` to parse an array of arguments. Generally, you'd get these from an instance of `CommandLine`. 
+You can use an instance of `CommandLineParser` to parse an array of arguments. Generally, you'd get these from an instance of `CommandLine`, but the `argsFrom(string:)` function can produce these from a plain string. 
 
 From there, a parser has methods to extract strings, ints, doubles, bools and more.
+
+```swift
+var parser = CommandLineParser()
+parser.arguments = CommandLine.arguments
+let name = parser.stringFor(key: "name")
+let age = parser.intFor(key: "age")
+```
+
+You can also produce a parsable array from a plain string with the `CommandLineParser.argsFrom(string:)
 
 
 ## Examples
