@@ -1,10 +1,11 @@
 //
-//  Flag.swift
-//  Grate
+//  CommandLineFlag.swift
 //
 //  Created by Christopher Ladd on 1/11/20.
-//  Copyright © 2020 Christopher Ladd. All rights reserved.
+//  Copyright © 2020 Better Notes, LLC
 //
+
+
 
 import Foundation
 
