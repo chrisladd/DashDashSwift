@@ -100,3 +100,8 @@ let size = parser.intFor(key: "size") ?? 1024
 
 ```
 
+## Who made this?
+
+Great question. [I'm Chris](http://www.chrisladd.net)—I make iOS apps like [ChordBank](https://www.chordbank.com) and [Better Notes](https://apps.apple.com/us/app/better-notes-lists-and-todos/id980887055), in addition to selected client dev and design work. In the process, I write lots and lots of command line utilities.
+
+Do you have an interesting and well-financed iOS project you'd like help with? [Let's talk](http://www.chrisladd.net/contact/)!
