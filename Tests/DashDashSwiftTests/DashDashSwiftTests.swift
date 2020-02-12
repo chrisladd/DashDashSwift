@@ -116,13 +116,47 @@ class FlagTests: XCTestCase {
 
     // MARK: Help
     
+    func testDescriptionIndentation() {
+        parser = CommandLineParser(title: "DashDashSwift", description: """
+For a year and a half, the GNU shell was "just about done". The author made repeated promises to deliver what he had done, and never kept them.
+
+Finally I could no longer believe he would ever deliver anything.
+
+So Foundation staff member Brian Fox is now implementing an imitation of the Bourne shell.  Once it is done, we will extend it with the features of the Korn shell, thus coming to Berkeley's aid.
+""")
+        
+        let expHelp = """
+  DashDashSwift
+
+  For a year and a half, the GNU shell was "just about done".
+  The author made repeated promises to deliver what he had
+  done, and never kept them.
+  
+  Finally I could no longer believe he would ever deliver
+  anything.
+  
+  So Foundation staff member Brian Fox is now implementing
+  an imitation of the Bourne shell.  Once it is done, we
+  will extend it with the features of the Korn shell, thus
+  coming to Berkeley's aid.
+
+
+"""
+
+        XCTAssertEqual(parser.help(), expHelp)
+        
+        print("\n")
+        parser.printHelp()
+        print("\n")
+    }
+    
     func testHelpIndentation() {
         parser.register(key: "force", shortKey: "f", description: "whether to force the issue")
         parser.register(key: "recursive", shortKey: "r", description: "whether to force all the other issues")
         
         let expHelp = """
---force      -f  whether to force the issue
---recursive  -r  whether to force all the other issues
+  --force      -f  whether to force the issue
+  --recursive  -r  whether to force all the other issues
 
 """
 
@@ -133,12 +167,12 @@ class FlagTests: XCTestCase {
         parser.register(key: "force", shortKey: "f", description: "By such deductions the law of gravitation is rendered probable, that every particle attracts every other particle with a force which varies inversely as the square of the distance. The law thus suggested is assumed to be universally true.")
         
         let expHelp = """
---force  -f  By such deductions the law of gravitation is
-             rendered probable, that every particle attracts
-             every other particle with a force which varies
-             inversely as the square of the distance. The
-             law thus suggested is assumed to be universally
-             true.
+  --force  -f  By such deductions the law of gravitation is
+               rendered probable, that every particle
+               attracts every other particle with a force
+               which varies inversely as the square of the
+               distance. The law thus suggested is assumed
+               to be universally true.
 
 """
 
@@ -149,12 +183,12 @@ class FlagTests: XCTestCase {
         parser.register(key: "force", shortKey: "f", description: "By such deductions the law of gravitation is rendered probable, that every particle attracts every other particle with a force which varies inversely as the square of the distance. The law thus suggested is assumed to be universally true.")
         
         let expHelp = """
---force  -f  By such deductions the law of gravitation is
-             rendered probable, that every particle attracts
-             every other particle with a force which varies
-             inversely as the square of the distance. The
-             law thus suggested is assumed to be universally
-             true.
+  --force  -f  By such deductions the law of gravitation is
+               rendered probable, that every particle
+               attracts every other particle with a force
+               which varies inversely as the square of the
+               distance. The law thus suggested is assumed
+               to be universally true.
 
 """
 
@@ -163,9 +197,9 @@ class FlagTests: XCTestCase {
         parser.maxLineLength = 120
         
          let expHelp2 = """
---force  -f  By such deductions the law of gravitation is rendered probable, that every particle attracts every other
-             particle with a force which varies inversely as the square of the distance. The law thus suggested is
-             assumed to be universally true.
+  --force  -f  By such deductions the law of gravitation is rendered probable, that every particle attracts every other
+               particle with a force which varies inversely as the square of the distance. The law thus suggested is
+               assumed to be universally true.
 
 """
 

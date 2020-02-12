@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 public struct CommandLineParser {
     var flags = [String: CommandLineFlag]()
     var keys = [String]()
@@ -21,12 +22,17 @@ public struct CommandLineParser {
     public var maxLineLength = 60
     
     /**
+     The indent, in characters, from the left edge of the terminal.
+     */
+    public var leftIndent = 2
+    
+    /**
      You may set the current arguments from `CommandLine.arguments` for more convenient access.
      */
     public var arguments = [String]()
     
     public init() {
-        register(key: "help", shortKey: "h", description: "Show this help message")
+        
     }
 
     /**
@@ -73,16 +79,18 @@ public struct CommandLineParser {
      */
     public func help() -> String {
         var help = ""
+        let spacing = CommandLineFlag.spacingFor(flags: Array(flags.values), leftIndent: leftIndent, lineLength: maxLineLength)
         
         if let title = title {
-            help.append("\(title)\n")
+            help = help.appending(input: title, lineLength: maxLineLength, indent: leftIndent)
+            help.append("\n")
         }
         
         if let description = description {
-            help.append("\(description)\n\n")
+            help += "\n"
+            help = help.appending(input: description, lineLength: maxLineLength, indent: leftIndent)
+            help += "\n\n"
         }
-        
-        let spacing = CommandLineFlag.spacingFor(flags: Array(flags.values), lineLength: maxLineLength)
         
         for key in keys {
             guard let flag = flags[key] else { continue }

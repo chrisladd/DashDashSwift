@@ -32,8 +32,7 @@ struct CommandLineFlag {
         var lineLength = 60
     }
     
-    static func spacingFor(flags: [CommandLineFlag], lineLength: Int = 60) -> MessageSpacing {
-        let leftIndent = 0
+    static func spacingFor(flags: [CommandLineFlag], leftIndent: Int = 2, lineLength: Int = 60) -> MessageSpacing {
         let interFlagSpacing = 2
         let flagMessageSpacing = 2
         let dashDashWidth = 2
