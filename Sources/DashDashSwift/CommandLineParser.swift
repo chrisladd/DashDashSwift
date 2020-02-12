@@ -14,6 +14,13 @@ public struct CommandLineParser {
     var description: String?
     
     /**
+     The maximum number of lines to be printed to the console.
+     
+     In practice, this is used to ensure that `--help` prints properly.
+     */
+    public var maxLineLength = 60
+    
+    /**
      You may set the current arguments from `CommandLine.arguments` for more convenient access.
      */
     public var arguments = [String]()
@@ -75,9 +82,11 @@ public struct CommandLineParser {
             help.append("\(description)\n\n")
         }
         
+        let spacing = CommandLineFlag.spacingFor(flags: Array(flags.values), lineLength: maxLineLength)
+        
         for key in keys {
             guard let flag = flags[key] else { continue }
-            help.append(flag.message())
+            help.append(flag.message(spacing: spacing))
             help.append("\n")
         }
         
@@ -223,7 +232,7 @@ public struct CommandLineParser {
     /**
      Returns a boolean given a flag's presence or absense. E.g. --help
      */
-    public func boolForKey(_ key: String, shortKey: String?, args: [String]) -> Bool {
+    public func boolForKey(_ key: String, shortKey: String? = nil, args: [String]) -> Bool {
 
         if args.firstIndex(of: "--" + key) != nil {
             return true
@@ -237,13 +246,6 @@ public struct CommandLineParser {
         guard let shortKey = shortKeyWith(key: key, shortKey: shortKey) else { return false }
         
         return argsContainSingleDashed(key: shortKey, args: args)
-    }
-    
-    /**
-    Returns a boolean given a flag's presence or absense. E.g. --help
-    */
-    public func boolForKey(_ key: String, args: [String]) -> Bool {
-        return boolForKey(key, shortKey: nil, args: args)
     }
     
     /**
@@ -269,18 +271,11 @@ public struct CommandLineParser {
     /**
      Returns the key's value as a string, but ensures paths end in a trailing `/`
      */
-    public func dirFor(key: String, shortKey: String?, args: [String]) -> String? {
+    public func dirFor(key: String, shortKey: String? = nil, args: [String]) -> String? {
         guard let path = stringFor(key: key, shortKey: shortKey, args: args) else { return nil }
         return dirWithPath(path)
     }
     
-    /**
-    Returns the key's value as a string, but ensures paths end in a trailing `/`
-    */
-    public func dirFor(key: String, args: [String]) -> String? {
-        return dirFor(key: key, shortKey: nil, args: args)
-    }
-
     /**
     Returns the key's value as a string, but ensures paths end in a trailing `/`
     */
@@ -295,7 +290,7 @@ public struct CommandLineParser {
      
      E.g. --size 10 -> 10
      */
-    public func intFor(key: String, shortKey: String?, args: [String]) -> Int? {
+    public func intFor(key: String, shortKey: String? = nil, args: [String]) -> Int? {
         guard let string = stringFor(key: key, shortKey: shortKey, args: args) else { return nil }
         return Int(string)
     }
@@ -308,16 +303,6 @@ public struct CommandLineParser {
     public func intFor(key: String, shortKey: String?) -> Int? {
         guard let string = stringFor(key: key, shortKey: shortKey) else { return nil }
         return Int(string)
-    }
-    
-
-    /**
-    Returns the integer value of the key.
-    
-    E.g. --size 10 -> 10
-    */
-    public func intFor(key: String, args: [String]) -> Int? {
-        return intFor(key: key, shortKey: nil, args: args)
     }
     
     /**
