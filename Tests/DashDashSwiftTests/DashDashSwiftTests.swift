@@ -6,8 +6,8 @@ class FlagTests: XCTestCase {
     var parser = CommandLineParser()
 
     override func setUp() {
-        parser.arguments = []
-        parser.unregisterAllKeys()
+        parser = CommandLineParser()
+        parser.maxLineLength = 60
     }
     
     // MARK: Strings

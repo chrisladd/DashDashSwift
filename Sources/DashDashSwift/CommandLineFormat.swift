@@ -26,6 +26,6 @@ struct CommandLineFormat {
     /**
      The maximum allowed line length
      */
-    var lineLength = 60
+    var lineLength = 70
 }
 
