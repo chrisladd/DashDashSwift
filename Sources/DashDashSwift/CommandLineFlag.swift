@@ -10,35 +10,46 @@
 import Foundation
 
 struct CommandLineFlag {
-    struct MessageSpacing {
-        /**
-        Indentation, from the beinning of the line for the `--key`
-        */
-        var leftIndent = 0
+    let key: String
+    let shortKey: String?
+    let description: String?
+    
+    func message(spacing: CommandLineFormat? = nil) -> String {
+        let spacing = spacing ?? CommandLineFormat()
         
-        /**
-        Indentation, from the beinning of the line, for the `-s`hort key, if it exists
-        */
-        var shortKeyIndent = 0
+        var string = ""
+        string += String(repeating: " ", count: spacing.leftIndent)
+        string += "--" + key
         
-        /**
-         Indentation, from the beinning of the line, for the description
-         */
-        var descriptionIndent = 0
+        if string.count < spacing.shortKeyIndent {
+            string += String(repeating: " ", count: spacing.shortKeyIndent - string.count)
+        }
+
+        if let shortKey = shortKey {
+            string += "-" + shortKey
+        }
         
-        /**
-         The maximum allowed line length
-         */
-        var lineLength = 60
+        if string.count < spacing.descriptionIndent {
+            string += String(repeating: " ", count: spacing.descriptionIndent - string.count)
+        }
+
+        if let description = description {
+            string = string.appending(input: description, lineLength: spacing.lineLength, indent: spacing.descriptionIndent)
+        }
+        
+        return string
     }
     
-    static func spacingFor(flags: [CommandLineFlag], leftIndent: Int = 2, lineLength: Int = 60) -> MessageSpacing {
+    /**
+     Returns spacing required to render the array of flags, with configurable indents and lineLength
+     */
+    static func spacingFor(flags: [CommandLineFlag], leftIndent: Int = 2, lineLength: Int = 60) -> CommandLineFormat {
         let interFlagSpacing = 2
         let flagMessageSpacing = 2
         let dashDashWidth = 2
         let dashWidth = 1
         
-        var spacing = MessageSpacing()
+        var spacing = CommandLineFormat()
         spacing.lineLength = lineLength
         spacing.leftIndent = leftIndent
         
@@ -62,65 +73,5 @@ struct CommandLineFlag {
         }
         
         return spacing
-    }
-    
-    
-    let key: String
-    let shortKey: String?
-    let description: String?
-    
-    func message(spacing: MessageSpacing? = nil) -> String {
-        let spacing = spacing ?? MessageSpacing()
-        
-        var string = ""
-        string += String(repeating: " ", count: spacing.leftIndent)
-        string += "--" + key
-        
-        if string.count < spacing.shortKeyIndent {
-            string += String(repeating: " ", count: spacing.shortKeyIndent - string.count)
-        }
-
-        if let shortKey = shortKey {
-            string += "-" + shortKey
-        }
-        
-        if string.count < spacing.descriptionIndent {
-            string += String(repeating: " ", count: spacing.descriptionIndent - string.count)
-        }
-
-        var currentLine = string
-        if let description = description {
-            // break up into words
-            let tagger = NSLinguisticTagger(tagSchemes: [.tokenType], options: 0)
-            tagger.string = description
-
-            let range = NSRange(location: 0, length: description.utf16.count)
-            if #available(OSX 10.13, *) {
-                tagger.enumerateTags(in: range, unit: .word, scheme: .tokenType, options: []) { _, tokenRange, _ in
-                    let word = (description as NSString).substring(with: tokenRange)
-                    
-                    let isSingleCharacter = word.count == 1
-                    let isLineTooLong = currentLine.count + word.count > spacing.lineLength
-                    
-                    if isLineTooLong && !isSingleCharacter {
-                        // drop trailing spaces, if they exist
-                        if string.last == " " {
-                            string.remove(at: string.index(before: string.endIndex))
-                        }
-                        
-                        currentLine = String(repeating: " ", count: spacing.descriptionIndent)
-                        string += "\n" + String(repeating: " ", count: spacing.descriptionIndent)
-                    }
-                    
-                    string += word
-                    currentLine += word
-
-                }
-            } else {
-                string += description
-            }
-        }
-        
-        return string
     }
 }
