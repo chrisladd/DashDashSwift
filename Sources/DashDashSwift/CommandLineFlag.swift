@@ -59,7 +59,7 @@ struct CommandLineFlag {
             }
             
             let length = spacing.shortKeyIndent + shortKeyLength + flagMessageSpacing
-            spacing.descriptionIndent = max(spacing.shortKeyIndent, length)
+            spacing.descriptionIndent = max(spacing.descriptionIndent, length)
         }
         
         return spacing
