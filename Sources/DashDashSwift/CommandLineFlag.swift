@@ -12,6 +12,7 @@ import Foundation
 struct CommandLineFlag {
     let key: String
     let shortKey: String?
+    let index: Int?
     let description: String?
     
     func message(spacing: CommandLineFormat? = nil) -> String {

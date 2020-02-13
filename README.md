@@ -77,8 +77,8 @@ parser.arguments = CommandLine.arguments
 // optionally register your commands with the parser.
 // this allows you to ask for `key` and get `shortKey` automatically,
 // as well as printing a help message with all the commands automatically.
-parser.register(key: "input", shortKey: "i", description: "The location where files should be read from.")
-parser.register(key: "output",  shortKey: "o", description: "The location where files should be saved.")
+parser.register(key: "input", shortKey: "i", index: 0, description: "The location where files should be read from.")
+parser.register(key: "output",  shortKey: "o", index: 1, description: "The location where files should be saved.")
 parser.register(key: "size", shortKey: "s", description: "The desired file size, in bytes")
 parser.register(key: "all", shortKey: "a", description: "Boolean. Whether or not all directories should be included.")
 parser.register(key: "help", shortKey: "h", description: "Print this help message")
@@ -103,8 +103,12 @@ let size = parser.int(forKey: "size") ?? 1024
 // or
 //    script --input ./path1 --output ./path2
 //
-let input = parser.stringFor(key: "input", or: 0)
-let output = parser.stringFor(key: "output", or: 1)
+let input = parser.stringFor(key: "input")
+let output = parser.stringFor(key: "output")
+
+// you can also grab these on the fly like so:
+// parser.string(forKey: "path", index: 0)
+
 
 if let input = input, let output = output {
    // ...
