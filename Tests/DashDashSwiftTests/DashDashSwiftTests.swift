@@ -51,6 +51,16 @@ class FlagTests: XCTestCase {
         XCTAssertEqual(parser.string(forKey: "name", shortKey: "n", args: args), "Scruffy")
     }
 
+    func testStringIndices() {
+        parser.register(key: "name", index: 0)
+        parser.register(key: "age", index: 1)
+        let args = CommandLineParser.args(from: "Scruffy 7")
+        parser.arguments = args
+        
+        XCTAssertEqual(parser.string(forKey: "name"), "Scruffy")
+        XCTAssertEqual(parser.int(forKey: "age"), 7)
+    }
+    
     // MARK: Ints
     
     func testIntParsing() {
