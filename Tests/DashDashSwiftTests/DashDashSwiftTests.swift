@@ -37,6 +37,19 @@ class FlagTests: XCTestCase {
         let value = parser.string(forKey : "name")
         XCTAssertEqual(value, "Scruffy")
     }
+    
+    func testAllStringVariationsProduceSameResults() {
+        parser.register(key: "name", shortKey: "n", description: nil)
+        let args = CommandLineParser.argsFrom(string: "-n Scruffy")
+        parser.arguments = args
+        
+        XCTAssertEqual(parser.string(forKey: "n"), "Scruffy")
+        XCTAssertEqual(parser.string(forKey: "name"), "Scruffy")
+        XCTAssertEqual(parser.string(forKey: "n", args: args), "Scruffy")
+        XCTAssertEqual(parser.string(forKey: "name", args: args), "Scruffy")
+        XCTAssertEqual(parser.string(forKey: "name", shortKey: "n"), "Scruffy")
+        XCTAssertEqual(parser.string(forKey: "name", shortKey: "n", args: args), "Scruffy")
+    }
 
     // MARK: Ints
     
@@ -54,6 +67,19 @@ class FlagTests: XCTestCase {
         XCTAssertEqual(7, parser.int(forKey: "age", shortKey: "a", args: CommandLineParser.argsFrom(string: "-n Scruffy -a 7")))
     }
 
+    func testAllIntVariationsProduceSameResults() {
+        parser.register(key: "age", shortKey: "a", description: nil)
+        let args = CommandLineParser.argsFrom(string: "-a 17")
+        parser.arguments = args
+        
+        XCTAssertEqual(parser.int(forKey: "a"), 17)
+        XCTAssertEqual(parser.int(forKey: "age"), 17)
+        XCTAssertEqual(parser.int(forKey: "a", args: args), 17)
+        XCTAssertEqual(parser.int(forKey: "age", args: args), 17)
+        XCTAssertEqual(parser.int(forKey: "age", shortKey: "a"), 17)
+        XCTAssertEqual(parser.int(forKey: "age", shortKey: "a", args: args), 17)
+    }
+    
     // MARK: Doubles
     
     func testDoubleParsing() {
@@ -67,6 +93,18 @@ class FlagTests: XCTestCase {
         XCTAssertEqual(7.0, parser.double(forKey: "age", shortKey: "a"))
     }
     
+    func testAllDoubleVariationsProduceSameResults() {
+        parser.register(key: "age", shortKey: "a", description: nil)
+        let args = CommandLineParser.argsFrom(string: "-a 17")
+        parser.arguments = args
+        
+        XCTAssertEqual(parser.double(forKey: "a"), 17.0)
+        XCTAssertEqual(parser.double(forKey: "age"), 17.0)
+        XCTAssertEqual(parser.double(forKey: "a", args: args), 17.0)
+        XCTAssertEqual(parser.double(forKey: "age", args: args), 17.0)
+        XCTAssertEqual(parser.double(forKey: "age", shortKey: "a"), 17.0)
+        XCTAssertEqual(parser.double(forKey: "age", shortKey: "a", args: args), 17.0)
+    }
     
     // MARK: Unflagged Arguments
     
@@ -107,13 +145,25 @@ class FlagTests: XCTestCase {
         XCTAssertFalse(parser.bool(forKey: "recursive", args: CommandLineParser.argsFrom(string: "--path . ")))
     }
 
-
     func testCombinedFlags() {
         XCTAssertTrue(parser.bool(forKey: "f", args: CommandLineParser.argsFrom(string: "--path . -rf")))
         XCTAssertTrue(parser.bool(forKey: "r", args: CommandLineParser.argsFrom(string: "--path . -rf")))
-
     }
 
+    func testAllBoolVariationsProduceSameResults() {
+        parser.register(key: "isOfAge", shortKey: "a", description: nil)
+        let args = CommandLineParser.argsFrom(string: "-ajr")
+        parser.arguments = args
+        
+        XCTAssertEqual(parser.bool(forKey: "a"), true)
+        XCTAssertEqual(parser.bool(forKey: "isOfAge"), true)
+        XCTAssertEqual(parser.bool(forKey: "a", args: args), true)
+        XCTAssertEqual(parser.bool(forKey: "isOfAge", args: args), true)
+        XCTAssertEqual(parser.bool(forKey: "isOfAge", shortKey: "a"), true)
+        XCTAssertEqual(parser.bool(forKey: "isOfAge", shortKey: "a", args: args), true)
+    }
+
+    
     // MARK: Help
     
     func testDescriptionIndentation() {
