@@ -13,7 +13,7 @@ DashDashSwift is available as a Swift package. Here's [a quick guide from Apple]
 
 ## Getting Started
 
-You can use an instance of `CommandLineParser` to parse an array of arguments. Generally, you'd get these from an instance of `CommandLine`, but the `argsFrom(string:)` function can produce these from a plain string. 
+You can use an instance of `CommandLineParser` to parse an array of arguments. Generally, you'd get these from an instance of `CommandLine`, but the `args(from:)` function can produce these from a plain string. 
 
 From there, a parser has methods to extract strings, ints, doubles, bools and more.
 
@@ -30,7 +30,7 @@ The parser expects multi-character flags to be prefixed with `--`, and allows si
 ```swift
 let command = `-rf --path ./input.json -o ./output.json`
 var parser = CommandLineParser()
-parser.arguments = CommandLineParser.argsFrom(string: command)
+parser.arguments = CommandLineParser.args(from: command)
 
 let inputPath = parser.string(forKey: "path") // -> Optional("./input.json")
 let outputPath = parser.string(forKey: "o")   // -> Optional("./output.json")
