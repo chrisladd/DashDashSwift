@@ -19,8 +19,8 @@ From there, a parser has methods to extract strings, ints, doubles, bools and mo
 // example --name Chris --age 8
 var parser = CommandLineParser()
 parser.arguments = CommandLine.arguments
-let name = parser.stringFor(key: "name") -> Optional("Chris")
-let age = parser.intFor(key: "age") // -> Optional(8)
+let name = parser.stringFor(key: "name") // -> Optional("Chris")
+let age = parser.intFor(key: "age")      // -> Optional(8)
 ```
 
 The parser expects multi-character flags to be prefixed with `--`, and allows single-character boolean flags to be grouped together eith a single `-`. For example:
@@ -31,10 +31,10 @@ var parser = CommandLineParser()
 parser.arguments = CommandLineParser.argsFrom(string: command)
 
 let inputPath = parser.stringFor(key: "path") // -> Optional("./input.json")
-let outputPath = parser.stringFor(key: "o") // -> Optional("./output.json")
+let outputPath = parser.stringFor(key: "o")   // -> Optional("./output.json")
 
-let isRecursive = parser.boolFor(key: "r") // -> true
-let isForced = parser.boolFor(key: "f") // -> true
+let isRecursive = parser.boolFor(key: "r")    // -> true
+let isForced = parser.boolFor(key: "f")       // -> true
 ```
 
 
