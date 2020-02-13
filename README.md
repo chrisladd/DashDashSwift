@@ -16,10 +16,11 @@ You can use an instance of `CommandLineParser` to parse an array of arguments. G
 From there, a parser has methods to extract strings, ints, doubles, bools and more.
 
 ```swift
+// example --name Chris --age 8
 var parser = CommandLineParser()
 parser.arguments = CommandLine.arguments
-let name = parser.stringFor(key: "name")
-let age = parser.intFor(key: "age")
+let name = parser.stringFor(key: "name") -> Optional("Chris")
+let age = parser.intFor(key: "age") // -> Optional(8)
 ```
 
 The parser expects multi-character flags to be prefixed with `--`, and allows single-character boolean flags to be grouped together eith a single `-`. For example:
