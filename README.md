@@ -21,8 +21,8 @@ From there, a parser has methods to extract strings, ints, doubles, bools and mo
 // example --name Chris --age 8
 var parser = CommandLineParser()
 parser.arguments = CommandLine.arguments
-let name = parser.stringFor(key: "name") // -> Optional("Chris")
-let age = parser.intFor(key: "age")      // -> Optional(8)
+let name = parser.string(forKey: "name") // -> Optional("Chris")
+let age = parser.int(forKey: "age")      // -> Optional(8)
 ```
 
 The parser expects multi-character flags to be prefixed with `--`, and allows single-character boolean flags to be grouped together eith a single `-`. For example:
@@ -32,11 +32,11 @@ let command = `-rf --path ./input.json -o ./output.json`
 var parser = CommandLineParser()
 parser.arguments = CommandLineParser.argsFrom(string: command)
 
-let inputPath = parser.stringFor(key: "path") // -> Optional("./input.json")
-let outputPath = parser.stringFor(key: "o")   // -> Optional("./output.json")
+let inputPath = parser.string(forKey: "path") // -> Optional("./input.json")
+let outputPath = parser.string(forKey: "o")   // -> Optional("./output.json")
 
-let isRecursive = parser.boolFor(key: "r")    // -> true
-let isForced = parser.boolFor(key: "f")       // -> true
+let isRecursive = parser.bool(forKey: "r")    // -> true
+let isForced = parser.bool(forKey: "f")       // -> true
 ```
 
 
@@ -51,11 +51,11 @@ import DashDashSwift
 // create a parser
 var parser = CommandLineParser()
 
-let name = parser.stringFor(key: "name", shortKey: "n", args: CommandLine.arguments) ?? "Anonymous"
+let name = parser.string(forKey: "name", shortKey: "n", args: CommandLine.arguments) ?? "Anonymous"
 
-let age = parser.intFor(key: "age", args: CommandLine.arguments) ?? 21
+let age = parser.int(forKey: "age", args: CommandLine.arguments) ?? 21
 
-let height = parser.doubleFor(key: "height", shortKey:"h" args: CommandLine.arguments) ?? 180.0
+let height = parser.double(forKey: "height", shortKey:"h" args: CommandLine.arguments) ?? 180.0
 
 ```
 
@@ -70,7 +70,6 @@ import DashDashSwift
 // this will be printed when a user requests help
 var parser = CommandLineParser(title: "Chotchkie", description: "Chotchkie is a command line program to control the amount of flair on your uniform.")
 
-
 // optionally register the command line arguments to parse.
 // you may also pass this value in to any of the parser's functions
 parser.arguments = CommandLine.arguments
@@ -82,24 +81,34 @@ parser.register(key: "input", shortKey: "i", description: "The location where fi
 parser.register(key: "output",  shortKey: "o", description: "The location where files should be saved.")
 parser.register(key: "size", shortKey: "s", description: "The desired file size, in bytes")
 parser.register(key: "all", shortKey: "a", description: "Boolean. Whether or not all directories should be included.")
+parser.register(key: "help", shortKey: "h", description: "Print this help message")
 
-// parse! there are methods for strings, bools, directories, ints, and doubles
-// all, naturally, return optional values
-guard let input = parser.dirFor(key: "input") else {
+if (parser.bool(forKey: "h")) {
     parser.printHelp()
-    fatalError()
 }
 
-guard let output = parser.dirFor(key: "output") else { 
-    parser.printHelp()
-    fatalError()
-}
-
-if parser.boolFor(key: "all") {
+if parser.bool(forKey: "all") {
     // ...
 }
 
-let size = parser.intFor(key: "size") ?? 1024
+let size = parser.int(forKey: "size") ?? 1024
+
+// Be flexible! Allow users to pass in unnamed arguments, 
+// and fall back to them by index. 
+// 
+// The below code allows
+//    script ./path1 ./path2
+// or
+//    script -i ./path1 -o ./path2
+// or
+//    script --input ./path1 --output ./path2
+//
+let input = parser.stringFor(key: "input", or: 0)
+let output = parser.stringFor(key: "output", or: 1)
+
+if let input = input, let output = output {
+   // ...
+}
 
 ```
 
