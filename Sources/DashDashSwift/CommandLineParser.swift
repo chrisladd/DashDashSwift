@@ -46,6 +46,8 @@ public struct CommandLineParser {
         self.description = description
     }
     
+    // MARK: - Registering Keys
+    
     /**
      Registers a key, a short key, and a description.
      
@@ -111,7 +113,7 @@ public struct CommandLineParser {
     /**
      Returns an array of arguments which were not prepended by flags.
      */
-    public func unflaggedArgumentsFrom(_ args: [String]) -> [String] {
+    public func unflaggedArguments(from args: [String]) -> [String] {
         var unflaggedArgs = [String]()
         
         var isLastArgFlag = false
@@ -142,7 +144,7 @@ public struct CommandLineParser {
      Returns unflagged arguments from previously registered arguments
      */
     public func unflaggedArguments() -> [String] {
-        return unflaggedArgumentsFrom(arguments)
+        return unflaggedArguments(from: arguments)
     }
     
     // MARK: Strings
@@ -152,7 +154,9 @@ public struct CommandLineParser {
      
      If you've previously registered this key with the parser, the short key will be provided automatically.
      */
-    public func stringFor(key: String, shortKey: String?, args: [String]) -> String? {
+    public func string(forKey key: String, shortKey: String? = nil, args: [String]? = nil) -> String? {
+        let args = args ?? arguments
+        
         if let val = nextValueAfter(key: "--" + key, args: args) {
             return val
         }
@@ -176,39 +180,13 @@ public struct CommandLineParser {
         return nil
     }
 
-    
-    /**
-     Returns a string, given a key, from an array of arguments.
-     
-     If a short key was previously registered, that will also be checked.
-     */
-    public func stringFor(key: String, args: [String]) -> String? {
-        return stringFor(key: key, shortKey: nil, args: args)
-    }
-    
-    /**
-     Returns a string, given a key, from arguments previously registered.
-     */
-    public func stringFor(key: String, shortKey: String?) -> String? {
-        return stringFor(key: key, shortKey: shortKey, args: arguments)
-    }
-    
-    /**
-     Returns a string, given a key, from arguments previously registered.
-     
-     If a short key was previously registered, that will also be checked.
-     */
-    public func stringFor(key: String) -> String? {
-        return stringFor(key: key, shortKey: nil, args: arguments)
-    }
-    
     /**
      Returns a string, given a key, from arguments previously supplied.
      
      If no result is found, will look for an unnamed argument at `index`
      */
     public func stringFor(key: String, or index: Int) -> String? {
-        if let result = stringFor(key: key) {
+        if let result = string(forKey : key) {
             return result
         }
         
@@ -240,8 +218,9 @@ public struct CommandLineParser {
     /**
      Returns a boolean given a flag's presence or absense. E.g. --help
      */
-    public func boolForKey(_ key: String, shortKey: String? = nil, args: [String]) -> Bool {
-
+    public func bool(forKey key: String, shortKey: String? = nil, args: [String]? = nil) -> Bool {
+        let args = args ?? arguments
+        
         if args.firstIndex(of: "--" + key) != nil {
             return true
         }
@@ -254,13 +233,6 @@ public struct CommandLineParser {
         guard let shortKey = shortKeyWith(key: key, shortKey: shortKey) else { return false }
         
         return argsContainSingleDashed(key: shortKey, args: args)
-    }
-    
-    /**
-    Returns a boolean given a flag's presence or absense. E.g. --help
-    */
-    public func boolForKey(_ key: String) -> Bool {
-        return boolForKey(key, shortKey: nil, args: arguments)
     }
     
     public func dirWithPath(_ path: String) -> String {
@@ -279,16 +251,9 @@ public struct CommandLineParser {
     /**
      Returns the key's value as a string, but ensures paths end in a trailing `/`
      */
-    public func dirFor(key: String, shortKey: String? = nil, args: [String]) -> String? {
-        guard let path = stringFor(key: key, shortKey: shortKey, args: args) else { return nil }
+    public func dir(forKey key: String, shortKey: String? = nil, args: [String]? = nil) -> String? {
+        guard let path = string(forKey: key, shortKey: shortKey, args: args) else { return nil }
         return dirWithPath(path)
-    }
-    
-    /**
-    Returns the key's value as a string, but ensures paths end in a trailing `/`
-    */
-    public func dirFor(key: String) -> String? {
-        return dirFor(key: key, shortKey: nil, args: arguments)
     }
     
     // MARK: Ints
@@ -298,28 +263,9 @@ public struct CommandLineParser {
      
      E.g. --size 10 -> 10
      */
-    public func intFor(key: String, shortKey: String? = nil, args: [String]) -> Int? {
-        guard let string = stringFor(key: key, shortKey: shortKey, args: args) else { return nil }
+    public func int(forKey key: String, shortKey: String? = nil, args: [String]? = nil) -> Int? {
+        guard let string = string(forKey: key, shortKey: shortKey, args: args) else { return nil }
         return Int(string)
-    }
-    
-    /**
-     Returns the integer value of the key, as well as a short key.
-     
-     E.g. --size 10 -> 10
-     */
-    public func intFor(key: String, shortKey: String?) -> Int? {
-        guard let string = stringFor(key: key, shortKey: shortKey) else { return nil }
-        return Int(string)
-    }
-    
-    /**
-    Returns the integer value of the key.
-    
-    E.g. --size 10 -> 10
-    */
-    public func intFor(key: String) -> Int? {
-        return intFor(key: key, shortKey: nil, args: arguments)
     }
     
     // MARK: Doubles
@@ -329,47 +275,17 @@ public struct CommandLineParser {
     
     E.g. --size 10.7 -> 10.7
     */
-    public func doubleFor(key: String, shortKey: String?, args: [String]) -> Double? {
-        guard let string = stringFor(key: key, shortKey: shortKey, args: args) else { return nil }
+    public func double(forKey key: String, shortKey: String? = nil, args: [String]? = nil) -> Double? {
+        guard let string = string(forKey: key, shortKey: shortKey, args: args) else { return nil }
         return Double(string)
     }
-    
-    /**
-    Returns the double value of the key.
-    
-    E.g. --size 10.7 -> 10.7
-    */
-    public func doubleFor(key: String, shortKey: String?) -> Double? {
-        guard let string = stringFor(key: key, shortKey: shortKey, args: arguments) else { return nil }
-        return Double(string)
-    }
-    
-    
-    /**
-    Returns the double value of the key.
-    
-    E.g. --size 10.7 -> 10.7
-    */
-    public func doubleFor(key: String, args: [String]) -> Double? {
-        return doubleFor(key: key, shortKey: nil, args: args)
-    }
-    
-    /**
-    Returns the double value of the key.
-    
-    E.g. --size 10.7 -> 10.7
-    */
-    public func doubleFor(key: String) -> Double? {
-        return doubleFor(key: key, shortKey: nil, args: arguments)
-    }
-    
     
     // MARK: - Utility
     
     /**
      Returns an array of arguments given a string, in the same format returned by `CommandLine.arguments`
      */
-    public static func argsFrom(string: String) -> [String] {
+    public static func args(from string: String) -> [String] {
         var args: [String] =  ["."]
         let components = string.split(separator: " ").map({ String($0) })
         args.append(contentsOf: components)
