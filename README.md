@@ -1,5 +1,7 @@
 # DashDashSwift
 
+![DashDashSwift Logo](../assets/dashdashlogo.png?raw=true)
+
 An unopinionated command line parser for Swift CLI projects. DashDashSwift gives straightforward, sophisticated key-value access to command line arguments.
 
 ## Installation
