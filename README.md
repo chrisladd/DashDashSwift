@@ -103,8 +103,8 @@ let size = parser.int(forKey: "size") ?? 1024
 // or
 //    script --input ./path1 --output ./path2
 //
-let input = parser.stringFor(key: "input")
-let output = parser.stringFor(key: "output")
+let input = parser.string(forKey: "input")
+let output = parser.string(forKey: "output")
 
 // you can also grab these on the fly like so:
 // parser.string(forKey: "path", index: 0)
